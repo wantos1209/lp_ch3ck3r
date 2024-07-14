@@ -1,127 +1,113 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Barcode Scanner</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
     <style>
-        #interactive.viewport {
-          width: 100% !important;
-          height: 100px !important;
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            padding: 0;
+            background-color: #f2f2f2;
         }
-      </style>
+
+        #video-container {
+            width: 500px;
+            height: 300px;
+            background-color: #000;
+            position: relative;
+        }
+
+        #video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        #scan-button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        #result-container {
+            width: 500px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            margin-top: 20px;
+            display: none;
+        }
+
+        #result {
+            font-size: 16px;
+        }
+    </style>
 </head>
-
 <body>
-    <h1>Scan Barcode</h1>
-    @if (session('success'))
-        <p>{{ session('success') }}</p>
-    @endif
+    <div id="video-container">
+        <video id="video" autoplay></video>
+    </div>
 
-    <div id="interactive" class="viewport" style="width: 100%; height: 100px;"></div>
+    <button id="scan-button">Scan Barcode</button>
 
-<form id="barcode-form" action="/scan" method="POST" style="display: none;">
-    @csrf
-    <input type="text" name="barcode" id="barcode">
-    <button type="submit">Submit</button>
-</form>
+    <div id="result-container">
+        <p id="result"></p>
+    </div>
 
-<script>
-    $(document).ready(function() {
-        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-            alert('Media Devices API or getUserMedia not supported');
-            return;
-        }
+    <script src="script.js"></script>
+    <script>
+        const video = document.getElementById('video');
+const scanButton = document.getElementById('scan-button');
+const resultContainer = document.getElementById('result-container');
+const result = document.getElementById('result');
 
-        console.log('Initializing Quagga...');
-        $(document).ready(function() {
-    Quagga.init({
-        inputStream: {
-            name: "Live",
-            type: "LiveStream",
-            target: document.querySelector('#interactive')
-        },
-        decoder: {
-            readers: ["code_128_reader", "ean_reader", "ean_8_reader", "code_39_reader",
-                "code_39_vin_reader", "codabar_reader", "upc_reader", "upc_e_reader",
-                "i2of5_reader", "2of5_reader", "code_93_reader"
-            ]
-        }
-    }, function(err) {
-        if (err) {
-            console.error('Error initializing Quagga:', err);
-            alert('Error initializing Quagga: ' + err);
-            return;
-        }
-        console.log("Initialization finished. Ready to start");
-        Quagga.start();
+let barcodeScanner = null; // Placeholder for the barcode scanner instance
 
-        // Set dimensions after Quagga initializes
-        var interactiveElem = document.querySelector('#interactive');
-        interactiveElem.style.width = '100%';
-        interactiveElem.style.height = '100px';
+// Access the camera and display the video stream
+navigator.mediaDevices.getUserMedia({ video: true })
+    .then(stream => {
+        video.srcObject = stream;
+    })
+    .catch(error => {
+        console.error('Error accessing camera:', error);
     });
 
-    // Additional Quagga event handlers and processing logic here
+// Start scanning when the scan button is clicked
+scanButton.addEventListener('click', () => {
+    if (!barcodeScanner) {
+        // Initialize the barcode scanner library (e.g., QuaggaJS)
+        const decoder = {
+            // Replace with your chosen decoder library (e.g., QuaggaJS)
+        };
+
+        barcodeScanner = new decoder({
+            inputStream: {
+                target: video,
+            },
+            onDetected: (result) => {
+                displayResult(result.code);
+            },
+        });
+
+        barcodeScanner.start();
+    }
 });
-    
 
-        Quagga.onDetected(function(result) {
-            var code = result.codeResult.code;
-            console.log('Barcode detected:', code);
-            $('#barcode').val(code);
-            $('#barcode-form').submit();
-
-            // Menampilkan alert bahwa barcode berhasil terdeteksi
-            alert('Barcode scanned successfully: ' + code);
-        });
-
-        Quagga.onProcessed(function(result) {
-            if (result) {
-                console.log('Image processed successfully');
-                var drawingCtx = Quagga.canvas.ctx.overlay,
-                    drawingCanvas = Quagga.canvas.dom.overlay;
-
-                if (result.boxes) {
-                    drawingCtx.clearRect(0, 0, parseInt(drawingCanvas.getAttribute("width")), parseInt(
-                        drawingCanvas.getAttribute("height")));
-                    result.boxes.filter(function(box) {
-                        return box !== result.box;
-                    }).forEach(function(box) {
-                        Quagga.ImageDebug.drawPath(box, {
-                            x: 0,
-                            y: 1
-                        }, drawingCtx, {
-                            color: "green",
-                            lineWidth: 2
-                        });
-                    });
-                }
-
-                if (result.box) {
-                    Quagga.ImageDebug.drawPath(result.box, {
-                        x: 0,
-                        y: 1
-                    }, drawingCtx, {
-                        color: "#00F",
-                        lineWidth: 2
-                    });
-                }
-
-                if (result.codeResult && result.codeResult.code) {
-                    Quagga.ImageDebug.drawPath(result.line, {
-                        x: 'x',
-                        y: 'y'
-                    }, drawingCtx, {
-                        color: 'red',
-                        lineWidth: 3
-                    });
-                }
-            }
-        });
-    });
-</script>
+function displayResult(barcodeData) {
+    result.textContent = barcodeData;
+    resultContainer.style.display = 'block';
+}
+    </script>
 </body>
-
 </html>
