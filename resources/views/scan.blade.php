@@ -56,12 +56,14 @@
             console.log("Initialization finished. Ready to start");
             Quagga.start();
 
-            // Adjust dimensions after Quagga has initialized
+            // Forcefully set dimensions after a short delay
             setTimeout(function() {
                 var interactiveElem = document.querySelector('#interactive');
                 interactiveElem.style.width = '100%';
                 interactiveElem.style.height = '100px';
-            }, 500); // Adjust the delay as needed
+            }, 1000); // Adjust the delay as needed, sometimes a longer delay might be necessary
+
+            // Additional Quagga event handlers and processing logic here
         });
 
 
