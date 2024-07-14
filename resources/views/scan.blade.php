@@ -62,6 +62,9 @@
             console.log('Barcode detected:', code);
             $('#barcode').val(code);
             $('#barcode-form').submit();
+
+            // Menampilkan alert bahwa barcode berhasil terdeteksi
+            alert('Barcode scanned successfully: ' + code);
         });
 
         Quagga.onProcessed(function(result) {
