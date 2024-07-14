@@ -7,8 +7,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
     <style>
         #interactive.viewport {
-          width: 100%;
-          height: 100px;
+          width: 100% !important;
+          height: 100px !important;
         }
       </style>
 </head>
@@ -19,7 +19,7 @@
         <p>{{ session('success') }}</p>
     @endif
 
-    
+    <div id="interactive" class="viewport"></div>
 
 <form id="barcode-form" action="/scan" method="POST" style="display: none;">
     @csrf
