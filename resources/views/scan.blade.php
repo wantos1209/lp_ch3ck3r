@@ -1,55 +1,127 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Barcode Scanner with Laravel and Bootstrap</title>
-    
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Barcode Scanner</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
+    <style>
+        #interactive.viewport {
+          width: 100% !important;
+          height: 100px !important;
+        }
+      </style>
 </head>
+
 <body>
+    <h1>Scan Barcode</h1>
+    @if (session('success'))
+        <p>{{ session('success') }}</p>
+    @endif
+
+    <div id="interactive" class="viewport" style="width: 100%; height: 100px;"></div>
+
+<form id="barcode-form" action="/scan" method="POST" style="display: none;">
+    @csrf
+    <input type="text" name="barcode" id="barcode">
+    <button type="submit">Submit</button>
+</form>
+
+<script>
+    $(document).ready(function() {
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+            alert('Media Devices API or getUserMedia not supported');
+            return;
+        }
+
+        console.log('Initializing Quagga...');
+        $(document).ready(function() {
+    Quagga.init({
+        inputStream: {
+            name: "Live",
+            type: "LiveStream",
+            target: document.querySelector('#interactive')
+        },
+        decoder: {
+            readers: ["code_128_reader", "ean_reader", "ean_8_reader", "code_39_reader",
+                "code_39_vin_reader", "codabar_reader", "upc_reader", "upc_e_reader",
+                "i2of5_reader", "2of5_reader", "code_93_reader"
+            ]
+        }
+    }, function(err) {
+        if (err) {
+            console.error('Error initializing Quagga:', err);
+            alert('Error initializing Quagga: ' + err);
+            return;
+        }
+        console.log("Initialization finished. Ready to start");
+        Quagga.start();
+
+        // Set dimensions after Quagga initializes
+        var interactiveElem = document.querySelector('#interactive');
+        interactiveElem.style.width = '100%';
+        interactiveElem.style.height = '100px';
+    });
+
+    // Additional Quagga event handlers and processing logic here
+});
     
-    <div class="container">
-        <h1 class="mt-5 mb-3 text-center">Barcode Scanner with Laravel and Bootstrap</h1>
 
-        <div class="d-flex justify-content-center mb-4">
-            <div id="yourScannerDiv"></div>
-        </div>
+        Quagga.onDetected(function(result) {
+            var code = result.codeResult.code;
+            console.log('Barcode detected:', code);
+            $('#barcode').val(code);
+            $('#barcode-form').submit();
 
-        <script src="https://cdn.jsdelivr.net/npm/quagga"></script>
+            // Menampilkan alert bahwa barcode berhasil terdeteksi
+            alert('Barcode scanned successfully: ' + code);
+        });
 
-        <script>
-            Quagga.init({
-                inputStream : {
-                    name : "Live",
-                    type : "LiveStream",
-                    target: document.querySelector('#yourScannerDiv'),
-                    constraints: {
-                        width: 640, // Lebar frame kamera
-                        height: 480, // Tinggi frame kamera
-                        facingMode: "environment" // Atur mode kamera, "environment" untuk kamera belakang, "user" untuk kamera depan
-                    },
-                },
-                decoder : {
-                    readers : ["upc_reader", "ean_reader", "code_39_reader"] // Pembaca untuk UPC-A, EAN-13, dan Code 39
+        Quagga.onProcessed(function(result) {
+            if (result) {
+                console.log('Image processed successfully');
+                var drawingCtx = Quagga.canvas.ctx.overlay,
+                    drawingCanvas = Quagga.canvas.dom.overlay;
+
+                if (result.boxes) {
+                    drawingCtx.clearRect(0, 0, parseInt(drawingCanvas.getAttribute("width")), parseInt(
+                        drawingCanvas.getAttribute("height")));
+                    result.boxes.filter(function(box) {
+                        return box !== result.box;
+                    }).forEach(function(box) {
+                        Quagga.ImageDebug.drawPath(box, {
+                            x: 0,
+                            y: 1
+                        }, drawingCtx, {
+                            color: "green",
+                            lineWidth: 2
+                        });
+                    });
                 }
-            }, function(err) {
-                if (err) {
-                    console.error(err);
-                    return;
-                }
-                console.log("Initialization finished. Ready to start");
-                Quagga.start();
-            });
-            
-            Quagga.onDetected(function(result) {
-                var code = result.codeResult.code;
-                alert("Barcode detected: " + code);
-            });
-            </script>
-            
-    </div>
 
+                if (result.box) {
+                    Quagga.ImageDebug.drawPath(result.box, {
+                        x: 0,
+                        y: 1
+                    }, drawingCtx, {
+                        color: "#00F",
+                        lineWidth: 2
+                    });
+                }
+
+                if (result.codeResult && result.codeResult.code) {
+                    Quagga.ImageDebug.drawPath(result.line, {
+                        x: 'x',
+                        y: 'y'
+                    }, drawingCtx, {
+                        color: 'red',
+                        lineWidth: 3
+                    });
+                }
+            }
+        });
+    });
+</script>
 </body>
+
 </html>
