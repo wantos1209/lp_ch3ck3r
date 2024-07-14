@@ -6,25 +6,25 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
     <style>
-        #interactive.viewport {
-            width: 100%;
-            max-width: 100vw; /* Sesuaikan dengan lebar viewport */
-            height: 150px; /* Tinggi tetap 150px */
-            border: 1px solid #000;
-            overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+       #interactive.viewport {
+    width: 100%;
+    max-width: 100vw; /* Sesuaikan dengan lebar viewport */
+    height: 150px; /* Tetapkan tinggi tetap */
+    border: 1px solid #000;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 
-        /* Menambahkan pengaturan CSS untuk orientasi potret */
-        .portrait #interactive video {
-            transform: rotate(90deg);
-            transform-origin: center center;
-            width: auto;
-            height: 100%;
-            object-fit: cover; /* Sesuaikan dengan ruang viewport */
-        }
+/* CSS untuk mengatur orientasi potret */
+.portrait #interactive video {
+    transform: scale(-1, 1) rotate(90deg); /* Putar 90 derajat searah jarum jam */
+    transform-origin: center center;
+    width: auto;
+    height: 100%; /* Tetapkan tinggi penuh */
+    object-fit: cover; /* Atur objek fit agar video mengisi area dengan proporsi yang benar */
+}
     </style>
 </head>
 
