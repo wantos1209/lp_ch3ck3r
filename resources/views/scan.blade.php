@@ -8,17 +8,11 @@
 
 <body>
     <h1>Scan Barcode</h1>
-    @if (session('success'))
-        <p>{{ session('success') }}</p>
-    @endif
-
-    <video id="video" width="300" height="200" style="border: 1px solid gray"></video>
-
-    <form id="barcode-form" action="/scan" method="POST" style="display: none;">
-        @csrf
-        <input type="text" name="barcode" id="barcode">
-        <button type="submit">Submit</button>
-    </form>
+    <div id="scanner-container">
+        <video id="scanner-video"></video>
+        <canvas id="scanner-canvas"></canvas>
+        <div id="scanner-results"></div>
+    </div>
 
     <script>
         // Initialize QuaggaJS decoder
