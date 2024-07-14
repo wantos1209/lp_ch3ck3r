@@ -21,8 +21,9 @@
         .portrait #interactive video {
             transform: rotate(90deg);
             transform-origin: center center;
-            width: 100%;
-            height: auto;
+            width: auto;
+            height: 100%;
+            object-fit: cover; /* Sesuaikan dengan ruang viewport */
         }
     </style>
 </head>
@@ -74,6 +75,10 @@
                         "code_39_vin_reader", "codabar_reader", "upc_reader", "upc_e_reader",
                         "i2of5_reader", "2of5_reader", "code_93_reader"
                     ]
+                },
+                locator: {
+                    patchSize: "medium",
+                    halfSample: true
                 }
             }, function(err) {
                 if (err) {
