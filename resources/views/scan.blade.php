@@ -8,8 +8,25 @@
     <style>
         #interactive.viewport {
             width: 100%;
-            height: 300px; /* Atur tinggi sesuai kebutuhan Anda */
+            max-width: 1280px; /* Atur sesuai kebutuhan Anda */
+            height: auto;
+            aspect-ratio: 16 / 9; /* Memastikan video selalu horizontal */
             border: 1px solid #000;
+        }
+
+        /* Menambahkan pengaturan CSS untuk orientasi lanskap dan potret */
+        @media (orientation: portrait) {
+            #interactive.viewport {
+                width: 100vw; /* Lebar penuh saat potret */
+                height: auto; /* Tinggi otomatis berdasarkan rasio aspek */
+            }
+        }
+
+        @media (orientation: landscape) {
+            #interactive.viewport {
+                width: 100%; /* Lebar penuh saat lanskap */
+                height: auto; /* Tinggi otomatis berdasarkan rasio aspek */
+            }
         }
     </style>
 </head>
@@ -42,8 +59,6 @@
                     type: "LiveStream",
                     target: document.querySelector('#interactive'),
                     constraints: {
-                        width: 1280, // Atur lebar video
-                        height: 300, // Atur tinggi video
                         facingMode: "environment" // Menggunakan kamera belakang jika ada
                     }
                 },
