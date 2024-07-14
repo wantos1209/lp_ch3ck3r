@@ -5,12 +5,7 @@
     <title>Barcode Scanner</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
-    <style>
-        #interactive {
-            width: 500px;
-            height: 150px;
-        }
-    </style>
+
 </head>
 
 <body>
@@ -19,7 +14,7 @@
         <p>{{ session('success') }}</p>
     @endif
 
-    <div id="interactive" class="viewport"></div>
+    <div id="interactive" class="viewport" style="width: 100% !important; height: 150px !important;"></div>
 
     <form id="barcode-form" action="/scan" method="POST" style="display: none;">
         @csrf
