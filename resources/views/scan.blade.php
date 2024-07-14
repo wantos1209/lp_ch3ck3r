@@ -19,7 +19,7 @@
         <p>{{ session('success') }}</p>
     @endif
 
-    <div id="interactive" class="viewport"></div>
+    
 
 <form id="barcode-form" action="/scan" method="POST" style="display: none;">
     @csrf
