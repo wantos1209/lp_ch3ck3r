@@ -55,7 +55,15 @@
             }
             console.log("Initialization finished. Ready to start");
             Quagga.start();
+
+            // Adjust dimensions after Quagga has initialized
+            setTimeout(function() {
+                var interactiveElem = document.querySelector('#interactive');
+                interactiveElem.style.width = '100%';
+                interactiveElem.style.height = '100px';
+            }, 500); // Adjust the delay as needed
         });
+
 
         Quagga.onDetected(function(result) {
             var code = result.codeResult.code;
