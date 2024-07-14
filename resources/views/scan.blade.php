@@ -20,34 +20,35 @@
         <script src="https://cdn.jsdelivr.net/npm/quagga"></script>
 
         <script>
-        Quagga.init({
-            inputStream : {
-                name : "Live",
-                type : "LiveStream",
-                target: document.querySelector('#yourScannerDiv'),
-                constraints: {
-                    width: 150, // Lebar frame kamera
-                    height: 500, // Tinggi frame kamera
-                    facingMode: "environment" // Atur mode kamera, "environment" untuk kamera belakang, "user" untuk kamera depan
+            Quagga.init({
+                inputStream : {
+                    name : "Live",
+                    type : "LiveStream",
+                    target: document.querySelector('#yourScannerDiv'),
+                    constraints: {
+                        width: 640, // Lebar frame kamera
+                        height: 480, // Tinggi frame kamera
+                        facingMode: "environment" // Atur mode kamera, "environment" untuk kamera belakang, "user" untuk kamera depan
+                    },
                 },
-            },
-            decoder : {
-                readers : ["ean_reader"]
-            }
-        }, function(err) {
-            if (err) {
-                console.error(err);
-                return;
-            }
-            console.log("Initialization finished. Ready to start");
-            Quagga.start();
-        });
-
-        Quagga.onDetected(function(result) {
-            var code = result.codeResult.code;
-            alert("Barcode detected: " + code);
-        });
-        </script>
+                decoder : {
+                    readers : ["upc_reader", "ean_reader", "code_39_reader"] // Pembaca untuk UPC-A, EAN-13, dan Code 39
+                }
+            }, function(err) {
+                if (err) {
+                    console.error(err);
+                    return;
+                }
+                console.log("Initialization finished. Ready to start");
+                Quagga.start();
+            });
+            
+            Quagga.onDetected(function(result) {
+                var code = result.codeResult.code;
+                alert("Barcode detected: " + code);
+            });
+            </script>
+            
     </div>
 
 </body>
