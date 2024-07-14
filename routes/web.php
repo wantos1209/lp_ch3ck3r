@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 
-use App\Http\Controllers\ScanController;
+use App\Http\Controllers\BarcodeController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -18,6 +18,5 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-
-Route::get('/scan', [ScanController::class, 'index']);
-Route::post('/scan', [ScanController::class, 'store']);
+Route::get('/scan', [BarcodeController::class, 'index']);
+Route::post('/scan', [BarcodeController::class, 'store']);
