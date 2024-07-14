@@ -5,6 +5,13 @@
     <title>Barcode Scanner</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
+    <style>
+        #interactive.viewport {
+            width: 100%;
+            height: 300px; /* Atur tinggi sesuai kebutuhan Anda */
+            border: 1px solid #000;
+        }
+    </style>
 </head>
 
 <body>
@@ -33,7 +40,12 @@
                 inputStream: {
                     name: "Live",
                     type: "LiveStream",
-                    target: document.querySelector('#interactive')
+                    target: document.querySelector('#interactive'),
+                    constraints: {
+                        width: 1280, // Atur lebar video
+                        height: 300, // Atur tinggi video
+                        facingMode: "environment" // Menggunakan kamera belakang jika ada
+                    }
                 },
                 decoder: {
                     readers: ["code_128_reader", "ean_reader", "ean_8_reader", "code_39_reader",
@@ -54,8 +66,8 @@
             Quagga.onDetected(function(result) {
                 var code = result.codeResult.code;
                 console.log('Barcode detected:', code);
+                alert('Barcode detected: ' + code);
                 $('#barcode').val(code);
-                $('#barcode-form').submit();
             });
 
             Quagga.onProcessed(function(result) {
@@ -65,8 +77,7 @@
                         drawingCanvas = Quagga.canvas.dom.overlay;
 
                     if (result.boxes) {
-                        drawingCtx.clearRect(0, 0, parseInt(drawingCanvas.getAttribute("width")), parseInt(
-                            drawingCanvas.getAttribute("height")));
+                        drawingCtx.clearRect(0, 0, parseInt(drawingCanvas.getAttribute("width")), parseInt(drawingCanvas.getAttribute("height")));
                         result.boxes.filter(function(box) {
                             return box !== result.box;
                         }).forEach(function(box) {
