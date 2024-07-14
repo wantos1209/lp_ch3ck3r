@@ -5,27 +5,6 @@
     <title>Barcode Scanner</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
-    <style>
-       #interactive.viewport {
-    width: 100%;
-    max-width: 100vw; /* Sesuaikan dengan lebar viewport */
-    height: 150px; /* Tetapkan tinggi tetap */
-    border: 1px solid #000;
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-/* CSS untuk mengatur orientasi potret */
-.portrait #interactive video {
-    transform: scale(-1, 1) rotate(90deg); /* Putar 90 derajat searah jarum jam */
-    transform-origin: center center;
-    width: auto;
-    height: 100%; /* Tetapkan tinggi penuh */
-    object-fit: cover; /* Atur objek fit agar video mengisi area dengan proporsi yang benar */
-}
-    </style>
 </head>
 
 <body>
@@ -43,42 +22,24 @@
     </form>
 
     <script>
-        function updateOrientation() {
-            if (window.innerHeight > window.innerWidth) {
-                document.body.classList.add('portrait');
-            } else {
-                document.body.classList.remove('portrait');
-            }
-        }
-
         $(document).ready(function() {
             if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
                 alert('Media Devices API or getUserMedia not supported');
                 return;
             }
 
-            updateOrientation(); // Atur orientasi saat pertama kali
-            window.addEventListener('resize', updateOrientation); // Atur orientasi saat perangkat dirotasi
-
             console.log('Initializing Quagga...');
             Quagga.init({
                 inputStream: {
                     name: "Live",
                     type: "LiveStream",
-                    target: document.querySelector('#interactive'),
-                    constraints: {
-                        facingMode: "environment" // Menggunakan kamera belakang jika ada
-                    }
+                    target: document.querySelector('#interactive')
                 },
                 decoder: {
                     readers: ["code_128_reader", "ean_reader", "ean_8_reader", "code_39_reader",
                         "code_39_vin_reader", "codabar_reader", "upc_reader", "upc_e_reader",
                         "i2of5_reader", "2of5_reader", "code_93_reader"
                     ]
-                },
-                locator: {
-                    patchSize: "medium",
-                    halfSample: true
                 }
             }, function(err) {
                 if (err) {
@@ -93,8 +54,8 @@
             Quagga.onDetected(function(result) {
                 var code = result.codeResult.code;
                 console.log('Barcode detected:', code);
-                alert('Barcode detected: ' + code);
                 $('#barcode').val(code);
+                $('#barcode-form').submit();
             });
 
             Quagga.onProcessed(function(result) {
@@ -104,7 +65,8 @@
                         drawingCanvas = Quagga.canvas.dom.overlay;
 
                     if (result.boxes) {
-                        drawingCtx.clearRect(0, 0, parseInt(drawingCanvas.getAttribute("width")), parseInt(drawingCanvas.getAttribute("height")));
+                        drawingCtx.clearRect(0, 0, parseInt(drawingCanvas.getAttribute("width")), parseInt(
+                            drawingCanvas.getAttribute("height")));
                         result.boxes.filter(function(box) {
                             return box !== result.box;
                         }).forEach(function(box) {
@@ -130,13 +92,12 @@
 
                     if (result.codeResult && result.codeResult.code) {
                         Quagga.ImageDebug.drawPath(result.line, {
-                                x: 'x',
-                                y: 'y'
-                            },
-                            drawingCtx, {
-                                color: 'red',
-                                lineWidth: 3
-                            });
+                            x: 'x',
+                            y: 'y'
+                        }, drawingCtx, {
+                            color: 'red',
+                            lineWidth: 3
+                        });
                     }
                 }
             });
