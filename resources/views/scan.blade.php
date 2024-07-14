@@ -17,8 +17,8 @@
             type : "LiveStream",
             target: document.querySelector('#yourScannerDiv'), // Ganti dengan ID atau class div tempat Anda ingin menampilkan scanner
             constraints: {
-                width: 1000,
-                height: 150,
+                width: 150,
+                height: 1000,
                 facingMode: "environment" // atau "user" untuk kamera depan
             },
         },
