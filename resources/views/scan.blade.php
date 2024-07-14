@@ -26,8 +26,8 @@
                 type : "LiveStream",
                 target: document.querySelector('#yourScannerDiv'),
                 constraints: {
-                    width: 640, // Lebar frame kamera
-                    height: 480, // Tinggi frame kamera
+                    width: 150, // Lebar frame kamera
+                    height: 640, // Tinggi frame kamera
                     facingMode: "environment" // Atur mode kamera, "environment" untuk kamera belakang, "user" untuk kamera depan
                 },
             },
