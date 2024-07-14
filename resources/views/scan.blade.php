@@ -9,21 +9,18 @@
         #interactive.viewport {
             width: 100%;
             max-width: 100vw; /* Sesuaikan dengan lebar viewport */
-            height: auto;
+            height: 150px; /* Tinggi tetap 150px */
             border: 1px solid #000;
             overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        /* Menambahkan pengaturan CSS untuk orientasi lanskap dan potret */
+        /* Menambahkan pengaturan CSS untuk orientasi potret */
         .portrait #interactive video {
             transform: rotate(90deg);
             transform-origin: center center;
-            width: auto;
-            height: 100vh; /* Tinggi penuh saat potret */
-        }
-
-        .landscape #interactive video {
-            transform: none;
             width: 100%;
             height: auto;
         }
@@ -48,9 +45,7 @@
         function updateOrientation() {
             if (window.innerHeight > window.innerWidth) {
                 document.body.classList.add('portrait');
-                document.body.classList.remove('landscape');
             } else {
-                document.body.classList.add('landscape');
                 document.body.classList.remove('portrait');
             }
         }
