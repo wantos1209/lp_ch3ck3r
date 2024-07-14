@@ -8,25 +8,26 @@
     <style>
         #interactive.viewport {
             width: 100%;
-            max-width: 1280px; /* Atur sesuai kebutuhan Anda */
-            height: auto;
-            aspect-ratio: 16 / 9; /* Memastikan video selalu horizontal */
+            height: 300px; /* Sesuaikan tinggi sesuai kebutuhan Anda */
             border: 1px solid #000;
+            overflow: hidden;
         }
 
-        /* Menambahkan pengaturan CSS untuk orientasi lanskap dan potret */
-        @media (orientation: portrait) {
-            #interactive.viewport {
-                width: 100vw; /* Lebar penuh saat potret */
-                height: auto; /* Tinggi otomatis berdasarkan rasio aspek */
-            }
+        /* Atur agar video tetap horizontal dalam mode potret */
+        #interactive video {
+            transform-origin: center center;
         }
 
-        @media (orientation: landscape) {
-            #interactive.viewport {
-                width: 100%; /* Lebar penuh saat lanskap */
-                height: auto; /* Tinggi otomatis berdasarkan rasio aspek */
-            }
+        .portrait #interactive video {
+            transform: rotate(90deg) translateX(25%);
+            width: 100vh; /* Sesuaikan dengan tinggi viewport saat dalam mode potret */
+            height: auto;
+        }
+
+        .landscape #interactive video {
+            transform: none;
+            width: 100%; 
+            height: auto;
         }
     </style>
 </head>
@@ -46,11 +47,24 @@
     </form>
 
     <script>
+        function updateOrientation() {
+            if (window.innerHeight > window.innerWidth) {
+                document.body.classList.add('portrait');
+                document.body.classList.remove('landscape');
+            } else {
+                document.body.classList.add('landscape');
+                document.body.classList.remove('portrait');
+            }
+        }
+
         $(document).ready(function() {
             if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
                 alert('Media Devices API or getUserMedia not supported');
                 return;
             }
+
+            updateOrientation(); // Atur orientasi saat pertama kali
+            window.addEventListener('resize', updateOrientation); // Atur orientasi saat perangkat dirotasi
 
             console.log('Initializing Quagga...');
             Quagga.init({
@@ -118,12 +132,13 @@
 
                     if (result.codeResult && result.codeResult.code) {
                         Quagga.ImageDebug.drawPath(result.line, {
-                            x: 'x',
-                            y: 'y'
-                        }, drawingCtx, {
-                            color: 'red',
-                            lineWidth: 3
-                        });
+                                x: 'x',
+                                y: 'y'
+                            },
+                            drawingCtx, {
+                                color: 'red',
+                                lineWidth: 3
+                            });
                     }
                 }
             });
