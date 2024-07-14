@@ -21,8 +21,9 @@
         .portrait #interactive video {
             transform: rotate(90deg);
             transform-origin: center center;
-            width: 100%;
-            height: auto;
+            width: auto;
+            height: 100%; /* Tinggi penuh saat potret */
+            object-fit: cover; /* Menyembunyikan potongan video yang tidak sesuai dengan viewport */
         }
     </style>
 </head>
@@ -138,6 +139,5 @@
         });
     </script>
 </body>
-
 
 </html>
