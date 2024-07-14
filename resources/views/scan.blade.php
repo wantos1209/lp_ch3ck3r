@@ -36,8 +36,8 @@
     });
     
     Quagga.onDetected(function(result) {
-        console.log("Barcode detected and processed : ", result);
-        // Lakukan sesuatu dengan hasil barcode yang terdeteksi, seperti mengirimkan ke backend atau menampilkannya di UI
+        var code = result.codeResult.code;
+        alert("Barcode detected: " + code);
     });
     </script>
 </body>
