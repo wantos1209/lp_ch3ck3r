@@ -3,7 +3,7 @@
 
 <head>
     <title>Barcode Scanner</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/quagga@5.0.2/dist/quagga.min.js"></script>
 </head>
 
 <body>
@@ -12,7 +12,7 @@
         <p>{{ session('success') }}</p>
     @endif
 
-    <div id="interactive" class="viewport"></div>
+    <video id="video" width="300" height="200" style="border: 1px solid gray"></video>
 
     <form id="barcode-form" action="/scan" method="POST" style="display: none;">
         @csrf
@@ -21,31 +21,44 @@
     </form>
 
     <script>
-        Quagga.init({
-            inputStream: {
-                name: "Live",
-                type: "LiveStream",
-                target: document.querySelector('#interactive')
-            },
-            decoder: {
-                readers: ["code_128_reader", "ean_reader", "ean_8_reader", "code_39_reader",
-                    "code_39_vin_reader", "codabar_reader", "upc_reader", "upc_e_reader",
-                    "i2of5_reader", "2of5_reader", "code_93_reader"
-                ]
-            }
-        }, function(err) {
-            if (err) {
-                console.log(err);
-                return;
-            }
-            console.log("Initialization finished. Ready to start");
-            Quagga.start();
+        // Initialize QuaggaJS decoder
+        const decoder = QuaggaJS.decoder({
+            locate: true, // Enable object location
+            highlight: true, // Highlight detected codes
+            debug: true // Print debugging messages
         });
 
-        Quagga.onDetected(function(result) {
-            var code = result.codeResult.code;
-            document.getElementById('barcode').value = code;
-            document.getElementById('barcode-form').submit();
+        // Get references to video and canvas elements
+        const videoElement = document.getElementById('scanner-video');
+        const canvasElement = document.getElementById('scanner-canvas');
+
+        // Start the camera and attach it to the video element
+        navigator.mediaDevices.getUserMedia({
+                video: true
+            })
+            .then(stream => {
+                videoElement.srcObject = stream;
+
+                // Attach decoder to the video stream
+                decoder.init({
+                    inputStream: {
+                        target: canvasElement,
+                        source: videoElement // Use videoElement as source
+                    }
+                });
+
+                // Start decoding process
+                decoder.start();
+            });
+
+        // Handle decoded codes
+        decoder.onDetected(result => {
+            const code = result.code; // Get the decoded code
+            const boundingBox = result.boundingBox; // Get the bounding box coordinates
+
+            // Display the decoded code and bounding box
+            document.getElementById('scanner-results').innerHTML = `Code: ${code}<br>
+        Bounding Box: ${boundingBox.x}, ${boundingBox.y}, ${boundingBox.width}, ${boundingBox.height}`;
         });
     </script>
 </body>
