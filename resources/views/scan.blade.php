@@ -5,14 +5,6 @@
     <title>Barcode Scanner</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/quagga"></script>
-    <style>
-        #yourScannerDiv {
-            width: 100%; /* lebar sesuai dengan keinginan Anda */
-            height: 400px; /* tinggi sesuai dengan keinginan Anda */
-            margin: auto; /* menengahkan div */
-            border: 1px solid #ccc; /* garis pinggir untuk membedakan area pemindaian */
-        }
-    </style>
 </head>
 
 <body>
@@ -25,7 +17,7 @@
             type : "LiveStream",
             target: document.querySelector('#yourScannerDiv'), // Ganti dengan ID atau class div tempat Anda ingin menampilkan scanner
             constraints: {
-                width: 480,
+                width: auto,
                 height: 320,
                 facingMode: "environment" // atau "user" untuk kamera depan
             },
