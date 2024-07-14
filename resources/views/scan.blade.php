@@ -5,6 +5,12 @@
     <title>Barcode Scanner</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
+    <style>
+        #interactive {
+            width: 100%;
+            height: 150px;
+        }
+    </style>
 </head>
 
 <body>
