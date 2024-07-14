@@ -8,25 +8,23 @@
     <style>
         #interactive.viewport {
             width: 100%;
-            height: 300px; /* Sesuaikan tinggi sesuai kebutuhan Anda */
+            max-width: 100vw; /* Sesuaikan dengan lebar viewport */
+            height: auto;
             border: 1px solid #000;
             overflow: hidden;
         }
 
-        /* Atur agar video tetap horizontal dalam mode potret */
-        #interactive video {
-            transform-origin: center center;
-        }
-
+        /* Menambahkan pengaturan CSS untuk orientasi lanskap dan potret */
         .portrait #interactive video {
-            transform: rotate(90deg) translateX(25%);
-            width: 100vh; /* Sesuaikan dengan tinggi viewport saat dalam mode potret */
-            height: auto;
+            transform: rotate(90deg);
+            transform-origin: center center;
+            width: auto;
+            height: 100vh; /* Tinggi penuh saat potret */
         }
 
         .landscape #interactive video {
             transform: none;
-            width: 100%; 
+            width: 100%;
             height: auto;
         }
     </style>
