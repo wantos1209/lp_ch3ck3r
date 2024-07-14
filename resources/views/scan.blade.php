@@ -18,7 +18,7 @@
             target: document.querySelector('#yourScannerDiv'), // Ganti dengan ID atau class div tempat Anda ingin menampilkan scanner
             constraints: {
                 width: 150,
-                height: 1000,
+                height: 800,
                 facingMode: "environment" // atau "user" untuk kamera depan
             },
         },
