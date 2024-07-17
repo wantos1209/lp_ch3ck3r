@@ -18,5 +18,6 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/scan', [BarcodeController::class, 'index']);
-Route::post('/scan', [BarcodeController::class, 'store']);
+Route::get('/', [BarcodeController::class, 'index']);
+Route::post('/scan', [BarcodeController::class, 'scan'])->name('barcode.scan');
+

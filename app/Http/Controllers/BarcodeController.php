@@ -8,14 +8,21 @@ class BarcodeController extends Controller
 {
     public function index()
     {
-        return view('scan');
+        return view('barcode');
     }
 
-    public function store(Request $request)
+    public function scan(Request $request)
     {
         $barcode = $request->input('barcode');
-        // Simpan barcode ke database atau lakukan sesuatu dengan barcode
 
-        return redirect('/scan')->with('success', 'Barcode berhasil dipindai dan disimpan.');
+        // Lakukan sesuatu dengan barcode, seperti mencari produk di database
+        // Misalnya:
+        // $product = Product::where('barcode', $barcode)->first();
+
+        return response()->json([
+            'status' => 'success',
+            'barcode' => $barcode,
+            // 'product' => $product
+        ]);
     }
 }
