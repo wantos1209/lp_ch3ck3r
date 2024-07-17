@@ -38,25 +38,25 @@
 
         Quagga.onDetected(function(data) {
             var barcode = data.codeResult.code;
-            console.log(barcode);
+            alert(barcode);
 
             // Kirim barcode ke server Laravel
-            fetch('{{ route('barcode.scan') }}', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                },
-                body: JSON.stringify({ barcode: barcode })
-            })
-            .then(response => response.json())
-            .then(data => {
-                console.log('Success:', data);
-                // Tampilkan data produk atau informasi lainnya di sini
-            })
-            .catch((error) => {
-                console.error('Error:', error);
-            });
+            // fetch('{{ route('barcode.scan') }}', {
+            //     method: 'POST',
+            //     headers: {
+            //         'Content-Type': 'application/json',
+            //         'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            //     },
+            //     body: JSON.stringify({ barcode: barcode })
+            // })
+            // .then(response => response.json())
+            // .then(data => {
+            //     console.log('Success:', data);
+            //     // Tampilkan data produk atau informasi lainnya di sini
+            // })
+            // .catch((error) => {
+            //     console.error('Error:', error);
+            // });
         });
     </script>
 </body>
