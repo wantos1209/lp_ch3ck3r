@@ -1,44 +1,45 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Barcode Scanner</title>
-    <script src="https://unpkg.com/html5-qrcode/minified/html5-qrcode.min.js"></script>
+    <title>Scan Barcode</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
 </head>
 <body>
-    <h1>Barcode Scanner</h1>
-    <div id="reader" style="width: 600px;"></div>
-    <script>
-        function onScanSuccess(decodedText, decodedResult) {
-            console.log(`Code scanned = ${decodedText}`, decodedResult);
-
-            // Kirim barcode ke server Laravel
-            fetch('{{ route('barcode.scan') }}', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+    <div id="interactive" class="viewport"></div>
+    <script type="text/javascript">
+        document.addEventListener('DOMContentLoaded', function() {
+            Quagga.init({
+                inputStream: {
+                    name: "Live",
+                    type: "LiveStream",
+                    target: document.querySelector('#interactive')
                 },
-                body: JSON.stringify({ barcode: decodedText })
-            })
-            .then(response => response.json())
-            .then(data => {
-                console.log('Success:', data);
-                // Tampilkan data produk atau informasi lainnya di sini
-            })
-            .catch((error) => {
-                console.error('Error:', error);
+                decoder: {
+                    readers: ["code_128_reader"]
+                }
+            }, function(err) {
+                if (err) {
+                    console.log(err);
+                    return;
+                }
+                console.log("Initialization finished. Ready to start");
+                Quagga.start();
             });
-        }
 
-        function onScanFailure(error) {
-            console.warn(`QR error = ${error}`);
-        }
-
-        let html5QrcodeScanner = new Html5QrcodeScanner(
-            "reader", { fps: 10, qrbox: 250 });
-        html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+            Quagga.onDetected(function(result) {
+                var code = result.codeResult.code;
+                alert("Barcode detected: " + code);
+                // Kirim data ke backend Laravel jika perlu
+                // fetch('/scan', {
+                //     method: 'POST',
+                //     headers: {
+                //         'Content-Type': 'application/json',
+                //         'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                //     },
+                //     body: JSON.stringify({ code: code })
+                // });
+            });
+        });
     </script>
 </body>
 </html>
