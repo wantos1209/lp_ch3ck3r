@@ -20,7 +20,7 @@ class UserController extends Controller
     {
         return view('users.create');
     }
-
+s
     public function store(Request $request)
     {
         $request->validate([
