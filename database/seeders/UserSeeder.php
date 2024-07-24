@@ -14,10 +14,30 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        User::create([
-            'name' => 'Administrator',
-            'username' => 'admin',
-            'password' => Hash::make('admin'),
-        ]);
+        $users = [
+            [
+                'name' => 'Administrator',
+                'username' => 'admin',
+                'password' => Hash::make('admin123'),
+                'isadmin' => true,
+                'area_id' => null
+            ],
+            [
+                'name' => 'Ujang',
+                'username' => 'ujang',
+                'password' => Hash::make('ujang123'),
+                'isadmin' => false,
+                'area_id' => 1
+            ],
+            [
+                'name' => 'Dono',
+                'username' => 'dono',
+                'password' => Hash::make('dono123'),
+                'isadmin' => false,
+                'area_id' => 2
+            ],
+        ];
+
+        User::insert($users);
     }
 }

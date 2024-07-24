@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AreaController;
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 
@@ -27,10 +28,9 @@ Route::middleware(['auth'])->group(function () {
         return view('welcome');
     });
 
-    // Route untuk logout
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-
-    // Route::get('/', [BarcodeController::class, 'index']);
     Route::post('/scan', [BarcodeController::class, 'scan'])->name('barcode.scan');
+
     Route::resource('users', UserController::class);
+    Route::resource('area', AreaController::class);
 });

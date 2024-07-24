@@ -17,11 +17,19 @@ class AuthController extends Controller
         $credentials = $request->only('username', 'password');
 
         if (Auth::attempt($credentials)) {
-            return redirect('/');
+            $user = Auth::user();
+            if ($user->isadmin) {
+                return redirect('/');
+            } else {
+                Auth::logout();
+                return back()->withErrors([
+                    'username' => 'You do not have admin access.',
+                ]);
+            }
         } else {
             // Login gagal
             return back()->withErrors([
-                'username' => 'The provided credentials do not match our records.',
+                'username' => 'Incorrect username or password.',
             ]);
         }
     }

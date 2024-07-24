@@ -55,10 +55,10 @@
             </li>
             <li class="nav-header">CONFIG</li>
             <li class="nav-item">
-                <a href="/posisi" class="nav-link {{ request()->is('posisi*') ? 'active' : '' }}">
+                <a href="/area" class="nav-link {{ request()->is('area*') ? 'active' : '' }}">
                     <i class="nav-icon fas fa-map"></i>
                     <p>
-                        Posisi
+                        Area
                     </p>
                 </a>
             </li>

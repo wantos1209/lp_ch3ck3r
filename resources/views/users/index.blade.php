@@ -27,6 +27,7 @@
                         <tr>
                             <th>Name</th>
                             <th>Username</th>
+                            <th>Area</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -35,6 +36,7 @@
                             <tr>
                                 <td>{{ $user->name }}</td>
                                 <td>{{ $user->username }}</td>
+                                <td>{{ $user->area->nama ?? '' }}</td>
                                 <td>
                                     <a href="{{ route('users.show', $user->id) }}" class="btn btn-info btn-sm">Show</a>
                                     <a href="{{ route('users.edit', $user->id) }}" class="btn btn-warning btn-sm">Edit</a>

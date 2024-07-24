@@ -44,6 +44,17 @@
                         <input type="password" id="password_confirmation" name="password_confirmation" class="form-control"
                             required>
                     </div>
+                    <div class="form-group">
+                        <label for="area_id">Area</label>
+                        <select id="area_id" name="area_id" class="form-control">
+                            <option value="">Select Area</option>
+                            @foreach ($areas as $area)
+                                <option value="{{ $area->id }}" {{ old('area_id') == $area->id ? 'selected' : '' }}>
+                                    {{ $area->nama }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
                     <button type="submit" class="btn btn-primary">Submit</button>
                     <a href="{{ route('users.index') }}" class="btn btn-secondary">Cancel</a>
                 </form>
