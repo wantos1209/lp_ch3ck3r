@@ -1,8 +1,11 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\BarcodeController;
+use App\Http\Controllers\UserController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -14,10 +17,20 @@ use App\Http\Controllers\BarcodeController;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+// Route untuk login
+Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [AuthController::class, 'login']);
+
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/', function () {
+        return view('welcome');
+    });
+
+    // Route untuk logout
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+    // Route::get('/', [BarcodeController::class, 'index']);
+    Route::post('/scan', [BarcodeController::class, 'scan'])->name('barcode.scan');
+    Route::resource('users', UserController::class);
 });
-
-Route::get('/', [BarcodeController::class, 'index']);
-Route::post('/scan', [BarcodeController::class, 'scan'])->name('barcode.scan');
-
