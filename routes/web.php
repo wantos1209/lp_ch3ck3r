@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\BarcodeController;
+use App\Http\Controllers\ListBarangController;
 use App\Http\Controllers\UserController;
 
 /*
@@ -33,4 +34,5 @@ Route::middleware(['auth'])->group(function () {
 
     Route::resource('users', UserController::class);
     Route::resource('area', AreaController::class);
+    Route::resource('listbarang', ListBarangController::class);
 });
